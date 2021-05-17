@@ -21,10 +21,10 @@
 
 |   날짜    |  내용  | yejiniee| jimin3263| 8471919|
 | :-------: | :----:|:----: |:----: |:----:|
-| 3.31 | 변수, 배열, 조건문, 반복문 |✔️|✔️|✔️|
-| 4.7 | 함수, 클래스, null |✔️|✔️|✔️|
-| 4.28 | layout, widget |✔️|✔️|✔️|
-| 5.5 | Activity, Container, Fragment |✔️|✔️|✔️|
+| 3.31 | 변수, 배열, 조건문, 반복문 |[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Yejin/week_1.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Jimin/week_1.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Hansu/week_1.md)|
+| 4.7 | 함수, 클래스, null |[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Yejin/week_2.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Jimin/week_2.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Hansu/week_2.md)|
+| 4.28 | layout, widget |[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Yejin/week_3.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Jimin/week_3.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Hansu/week_3.md)|
+| 5.5 | Activity, Container, Fragment |[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Yejin/week_4.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Jimin/week_4.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Hansu/week_4.md)|
 | 5.12 | 회원가입, 로그인 |- 페이스북 연동|- 구글 연동|- 로그인 화면 <br> - 회원가입|
 | 5.19 | 탭바, 업로드, 좋아요 버튼 ||||
 | 5.26 | 사진, 댓글 페이지 ||||
