@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.howlstagram_f16.R
 import com.example.howlstagram_f16.navigation.model.ContentDTO
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.item_detail.view.*
 
 class DetailViewFragment: Fragment() {
     var firestore : FirebaseFirestore? = null
+    var uid : String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +28,7 @@ class DetailViewFragment: Fragment() {
     ): View? {
         var view = LayoutInflater.from(activity).inflate(R.layout.fragment_detail, container, false)
         firestore = FirebaseFirestore.getInstance()
+        uid = FirebaseAuth.getInstance().currentUser?.uid
 
         view.detailviewfragment_recyclerview.adapter = DetailViewRecyclerViewAdapter()
         view.detailviewfragment_recyclerview.layoutManager = LinearLayoutManager(activity)
@@ -78,6 +81,46 @@ class DetailViewFragment: Fragment() {
 
             //좋아요 개수
             viewholder.detailviewitem_favoritecounter_textview.text="Likes "+ contentDTO!![position].favoriteCount
+
+            viewholder.detailviewitem_favorite_imageview.setOnClickListener {
+                favoriteEvent(position)
+            }
+
+            //좋아요 눌렀을 때 -> 꽉찬 하트, 안눌렀을 때 -> 빈 하트 설정
+            if (contentDTO!![position].favorites.containsKey(uid)){
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+            }else{
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
+            }
+
+        }
+
+        fun favoriteEvent(position: Int){
+            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+            firestore?.runTransaction { transaction ->
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+
+                if(contentDTO!!.favorites.containsKey(uid)){
+                    //좋아요 클릭되어 있을때
+
+
+                    // 좋아요 개수 -1
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
+                    // 유저 네임 제거
+                    contentDTO?.favorites.remove(uid)
+
+                }else{
+                    //좋아요 클릭되지 않을때
+
+                    //좋아요 개수 +1
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
+                    //유저 네임 추가
+                    contentDTO?.favorites[uid!!] = true
+
+                }
+                //서버로 돌려줌
+                transaction.set(tsDoc,contentDTO)
+            }
 
 
         }
