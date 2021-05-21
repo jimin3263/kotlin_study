@@ -2,6 +2,7 @@ package com.example.howlstagram_f16.navigation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestCoordinator
 import com.bumptech.glide.request.RequestOptions
 import com.example.howlstagram_f16.LoginActivity
 import com.example.howlstagram_f16.MainActivity
 import com.example.howlstagram_f16.R
 import com.example.howlstagram_f16.navigation.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
@@ -27,6 +31,11 @@ class UserFragment: Fragment() {
     var uid : String? = null
     var auth : FirebaseAuth? = null
     var currentUserUid : String? = null
+    companion object{
+        //static 선언
+        var PICK_PROFILE_FROM_ALBUM= 10
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,7 +70,30 @@ class UserFragment: Fragment() {
 
         fragmentView?.account_recyclerview?.adapter = UserFragmentRecyclerViewAdapter()
         fragmentView?.account_recyclerview?.layoutManager = GridLayoutManager(activity!!, 3)
+
+        //프로필 사진 수정
+        fragmentView?.account_iv_profile?.setOnClickListener {
+            var photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            activity?.startActivityForResult(photoPickerIntent,PICK_PROFILE_FROM_ALBUM)
+        }
+        getProfileImage(fragmentView)
         return fragmentView
+    }
+
+    //프로필 사진 가져오기
+    fun getProfileImage(fragmentView: View){
+        firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            if( documentSnapshot == null){
+                return@addSnapshotListener
+            }
+            if(documentSnapshot.data != null){
+                var url = documentSnapshot.data!!["image"]
+                //Log.d("profile",url.toString())
+                Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop()).into(fragmentView?.account_iv_profile!!)
+            }
+
+        }
     }
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var contentDTOs : ArrayList<ContentDTO> = arrayListOf()
