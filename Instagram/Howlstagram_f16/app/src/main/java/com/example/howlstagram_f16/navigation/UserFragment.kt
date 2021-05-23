@@ -44,7 +44,7 @@ class UserFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var fragmentView = LayoutInflater.from(activity).inflate(R.layout.fragment_user, container, false)
+        fragmentView = LayoutInflater.from(activity).inflate(R.layout.fragment_user, container, false)
         uid = arguments?.getString("destinationUid")
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -84,13 +84,13 @@ class UserFragment: Fragment() {
             photoPickerIntent.type = "image/*"
             activity?.startActivityForResult(photoPickerIntent,PICK_PROFILE_FROM_ALBUM)
         }
-        getProfileImage(fragmentView)
-        getFollowerAndFollowing(fragmentView)
+        getProfileImage()
+        getFollowerAndFollowing()
         return fragmentView
     }
 
     //데이터베이스에서 팔로워 팔로잉 수 가져옴
-    fun getFollowerAndFollowing(fragmentView:View){
+    fun getFollowerAndFollowing(){
         firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             if (documentSnapshot == null)
                 return@addSnapshotListener
@@ -167,7 +167,7 @@ class UserFragment: Fragment() {
     }
 
     //프로필 사진 가져오기
-    fun getProfileImage(fragmentView: View){
+    fun getProfileImage(){
         firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             if( documentSnapshot == null){
                 return@addSnapshotListener
