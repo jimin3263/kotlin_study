@@ -28,6 +28,6 @@
 | 4.28 | layout, widget |[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Yejin/week_3.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Jimin/week_3.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Hansu/week_3.md)|
 | 5.5 | Activity, Container, Fragment |[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Yejin/week_4.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Jimin/week_4.md)|[✔️](https://github.com/jimin3263/kotlin_study/blob/main/Hansu/week_4.md)|
 | 5.12 | 회원가입, 로그인 |- 페이스북 연동|- 구글 연동|- 로그인 화면 <br> - 회원가입|
-| 5.19 | 탭바, 업로드, 상세화면 |- 사진 업로드 <br> - 데이터 모델|- 상세 화면 <br> - 좋아요 기능|- 네비게이션 탭바|
-| 5.26 | 사진, 댓글 페이지 ||||
+| 5.19 | 탭바, 업로드, 상세 화면 |- 사진 업로드 <br> - 데이터 모델|- 상세 화면 <br> - 좋아요 기능|- 네비게이션 탭바|
+| 5.26 | 기능 추가 |- 댓글 기능|- 프로필 사진 업데이트 <br> - 팔로워, 팔로잉 기능 |- 자동 로그인 <br> - 툴바 <br> - 개인 화면 사진 연동|
 | 6.2 | 알림 ||||
