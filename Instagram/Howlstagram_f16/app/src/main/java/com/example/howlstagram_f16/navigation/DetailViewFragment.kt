@@ -1,5 +1,6 @@
 package com.example.howlstagram_f16.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
+import org.w3c.dom.Comment
 
 class DetailViewFragment: Fragment() {
     var firestore : FirebaseFirestore? = null
@@ -105,6 +107,11 @@ class DetailViewFragment: Fragment() {
                 fragment.arguments = bundle
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content,fragment)?.commit()
 
+            }
+            viewholder.detailviewitem_comment_imageview.setOnClickListener{ v->
+                var intent = Intent(v.context, CommentActivity::class.java)
+                intent.putExtra("contentUid", contentUidList[position])
+                startActivity(intent)
             }
 
         }
