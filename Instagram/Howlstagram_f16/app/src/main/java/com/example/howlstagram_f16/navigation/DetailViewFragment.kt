@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.howlstagram_f16.R
+import com.example.howlstagram_f16.navigation.model.AlarmDTO
 import com.example.howlstagram_f16.navigation.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 import org.w3c.dom.Comment
@@ -38,20 +40,20 @@ class DetailViewFragment: Fragment() {
     }
 
     inner class DetailViewRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-        var contentDTO : ArrayList<ContentDTO> = arrayListOf()
+        var contentDTOs : ArrayList<ContentDTO> = arrayListOf()
         var contentUidList : ArrayList<String> = arrayListOf()
 
         //데이터 받아옴
         init {
             firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                contentDTO.clear()
+                contentDTOs.clear()
                 contentUidList.clear()
                 //Sometimes, This code return null of querySnapshot when it signout
                 if(querySnapshot == null) return@addSnapshotListener
 
                 for(snapshot in querySnapshot!!.documents){
                     var item = snapshot.toObject(ContentDTO::class.java)
-                    contentDTO.add(item!!)
+                    contentDTOs.add(item!!)
                     contentUidList.add(snapshot.id)
                 }
                 //새로고침
@@ -66,33 +68,33 @@ class DetailViewFragment: Fragment() {
         inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
         override fun getItemCount(): Int {
-            return contentDTO.size
+            return contentDTOs.size
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             var viewholder = (holder as CustomViewHolder).itemView
 
             //유저 프로필 아이디
-            viewholder.detailviewitem_profile_textview.text = contentDTO!![position].userId
+            viewholder.detailviewitem_profile_textview.text = contentDTOs!![position].userId
 
             //유저 프로필 이미지
-            Glide.with(holder.itemView.context).load(contentDTO!![position].imageUrl).into(viewholder.detailviewitem_profile_image)
+            Glide.with(holder.itemView.context).load(contentDTOs!![position].imageUrl).into(viewholder.detailviewitem_profile_image)
 
             //업로드 이미지
-            Glide.with(holder.itemView.context).load(contentDTO!![position].imageUrl).into(viewholder.detailviewitem_imageview_content)
+            Glide.with(holder.itemView.context).load(contentDTOs!![position].imageUrl).into(viewholder.detailviewitem_imageview_content)
 
             //업로드 내용
-            viewholder.detailviewitem_explain_textview.text = contentDTO!![position].explain
+            viewholder.detailviewitem_explain_textview.text = contentDTOs!![position].explain
 
             //좋아요 개수
-            viewholder.detailviewitem_favoritecounter_textview.text="Likes "+ contentDTO!![position].favoriteCount
+            viewholder.detailviewitem_favoritecounter_textview.text="Likes "+ contentDTOs!![position].favoriteCount
 
             viewholder.detailviewitem_favorite_imageview.setOnClickListener {
                 favoriteEvent(position)
             }
 
             //좋아요 눌렀을 때 -> 꽉찬 하트, 안눌렀을 때 -> 빈 하트 설정
-            if (contentDTO!![position].favorites.containsKey(uid)){
+            if (contentDTOs!![position].favorites.containsKey(uid)){
                 viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
             }else{
                 viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
@@ -102,8 +104,8 @@ class DetailViewFragment: Fragment() {
             viewholder.detailviewitem_profile_image.setOnClickListener {
                 var fragment = UserFragment()
                 var bundle = Bundle()
-                bundle.putString("destinationUid", contentDTO[position].uid)
-                bundle.putString("userId", contentDTO[position].userId)
+                bundle.putString("destinationUid", contentDTOs[position].uid)
+                bundle.putString("userId", contentDTOs[position].userId)
                 fragment.arguments = bundle
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content,fragment)?.commit()
 
@@ -111,6 +113,7 @@ class DetailViewFragment: Fragment() {
             viewholder.detailviewitem_comment_imageview.setOnClickListener{ v->
                 var intent = Intent(v.context, CommentActivity::class.java)
                 intent.putExtra("contentUid", contentUidList[position])
+                intent.putExtra("destinationUid", contentDTOs[position].uid)
                 startActivity(intent)
             }
 
@@ -138,12 +141,23 @@ class DetailViewFragment: Fragment() {
                     //유저 네임 추가
                     contentDTO?.favorites[uid!!] = true
 
+                    favoriteAlarm(contentDTOs[position].uid!!)
+
                 }
                 //서버로 돌려줌
                 transaction.set(tsDoc,contentDTO)
             }
-
-
         }
+
+        fun favoriteAlarm(destinationUid : String) {
+            var alarmDTO = AlarmDTO()
+            alarmDTO.destinationUid = destinationUid
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp = System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+        }
+
     }
 }
