@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.ktx.Firebase
+//import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_photo.view.*
 import kotlinx.android.synthetic.main.activity_comment.*
 import kotlinx.android.synthetic.main.item_comment.view.*
@@ -52,6 +52,7 @@ class CommentActivity : AppCompatActivity() {
         var alarmDTO = AlarmDTO()
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.kind = 1
         alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
         alarmDTO.timestamp = System.currentTimeMillis()
         alarmDTO.message = message

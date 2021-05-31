@@ -14,12 +14,8 @@ import com.example.howlstagram_f16.navigation.model.AlarmDTO
 import com.example.howlstagram_f16.navigation.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
-import org.w3c.dom.Comment
 
 class DetailViewFragment: Fragment() {
     var firestore : FirebaseFirestore? = null

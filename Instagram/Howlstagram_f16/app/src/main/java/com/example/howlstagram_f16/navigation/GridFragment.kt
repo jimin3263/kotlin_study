@@ -35,6 +35,7 @@ class GridFragment: Fragment() {
         var contentDTOs : ArrayList<ContentDTO> = arrayListOf()
         init {
             firestore?.collection("images")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                contentDTOs.clear()
                 //Sometimes, This code return null of querySnapshot when it signout
                 if(querySnapshot == null) return@addSnapshotListener
 
@@ -54,9 +55,7 @@ class GridFragment: Fragment() {
             return CustomViewHolder(imageview)
         }
 
-        inner class CustomViewHolder(var imageview: ImageView) : RecyclerView.ViewHolder(imageview) {
-
-        }
+        inner class CustomViewHolder(var imageview: ImageView) : RecyclerView.ViewHolder(imageview)
 
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
             var imageview = (p0 as CustomViewHolder).imageview
