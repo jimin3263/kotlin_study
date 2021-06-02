@@ -13,6 +13,7 @@ import com.example.howlstagram_f16.R
 import com.example.howlstagram_f16.navigation.UserFragment.UserFragmentRecyclerViewAdapter.CustomViewHolder
 import com.example.howlstagram_f16.navigation.model.AlarmDTO
 import com.example.howlstagram_f16.navigation.model.ContentDTO
+import com.example.howlstagram_f16.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -57,6 +58,9 @@ class CommentActivity : AppCompatActivity() {
         alarmDTO.timestamp = System.currentTimeMillis()
         alarmDTO.message = message
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var msg = FirebaseAuth.getInstance().currentUser?.email+" "+getString(R.string.alarm_comment)+"of "+message
+        FcmPush.instance.sendMessage(destinationUid, "Howlstagram",msg)
     }
 
     inner class CommentRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){

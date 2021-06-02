@@ -14,6 +14,7 @@ import android.Manifest
 import android.app.Activity
 import android.view.View
 import bolts.Task
+import com.example.howlstagram_f16.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
@@ -85,6 +86,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottom_navigation.selectedItemId = R.id.action_home
         registerPushToken()
     }
+
+/*
+    override fun onStop() {
+        super.onStop()
+        FcmPush.instance.sendMessage("pD1r86WeUZP4343pZrJSojgMWv13", "hi", "bye")
+    }
+*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
